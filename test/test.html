@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试vue源码</title>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="../dist/vue.js"></script>
+
+  <script>
+    // test1 从最简单的例子看起
+    // 如果只是在data中定义了数据
+    // 但是没有挂载到页面的某个元素上的话,是不会触发响应式的
+    // if (vm.$options.el) { // instance/init.js
+    //   vm.$mount(vm.$options.el)
+    // }
+    // Object.defineProperty中的get中的Dep.target为null，不会收集依赖
+    // const vue = new Vue({
+    //   data () {
+    //     return {
+    //       a: 1
+    //     }
+    //   }
+    // })
+
+    // test2 增加el，并通过template的方式将a挂载到该元素上
+    const vue = new Vue({
+      el: '#app',
+      template: `
+        <div>{{a}}</div>
+      `,
+      data: function() {
+        return {
+          a: 1
+        }
+      }
+    })
+
+    console.log(vue)
+    console.log(vue.a)
+  </script>
+</body>
+</html>
