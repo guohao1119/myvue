@@ -29,6 +29,7 @@ function flushSchedulerQueue () {
 
   let watcher, index
 
+  // 这里没有使用变量存储queue.length是因为队列的长度随时可能变化
   for (index = 0; index < queue.length; index++) {
     watcher = queue[index]
     id = watcher.id

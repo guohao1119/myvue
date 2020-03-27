@@ -1,9 +1,26 @@
 import { arrayMethods } from './array'
+import VNode from '../vdom/vnode'
 import Dep from './dep'
 
+import { hasProto, hasOwn, isObject } from '../util/index'
+
 export function observe (value, asRootData) {
-  // 将data作为参数传给Observer构造函数
-  new Observer(value)
+  // 如果不是对象，或者不是虚拟结点，则不监测
+  if (!isObject(value) || value instanceof VNode) {
+    return
+  }
+
+  let ob
+  // 先判断当前数据有没有__ob__属性，且是不是Observer的实例
+  // 如果是，说明已经监听，不再重复监听
+  if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
+    ob = value.__ob__
+  } else {
+    // 将data作为参数传给Observer构造函数
+    ob = new Observer(value)
+  }
+  // 这个observe的返回值好像没有用到
+  return ob
 }
 
 export class Observer {
@@ -11,7 +28,12 @@ export class Observer {
   constructor (value) {
     // data是数组的处理
     if (Array.isArray(value)) {
+      // 根据是否支持使用__proto__进行不同处理
+      const augment = hasProto ? protoAugment : copyAugment
+
       augment(value, arrayMethods, arrayKeys)
+      // 观察数组中的元素
+      this.observeArray(value)
     } else { // data是对象的处理
       this.walk(value)
     }
@@ -24,6 +46,27 @@ export class Observer {
     for (let i = 0; i < keys.length; i ++) {
       defineReactive(obj, keys[i], obj[keys[i]])
     }
+  }
+
+  // 监测数组中的每一个元素
+  observeArray (items) {
+    for (let i = 0, l = item.length; i < l; i++) {
+      observe(items[i])
+    }
+  }
+}
+
+// 增强对象或数组的能力
+// 将src放在对象的__proto__上
+function protoAugment(target, src) {
+  target.__proto__ =src
+}
+
+// 通过Object.defineProperty重写数组的相关方法
+function copyAugment(target, src, keys) {
+  for (let i = 0, l = keys.length; i < l; i++) {
+    const key = keys[i]
+    def(target, key, src[key])
   }
 }
 
@@ -59,3 +102,4 @@ export function defineReactive(obj, key, val) {
     }
   })
 }
+
