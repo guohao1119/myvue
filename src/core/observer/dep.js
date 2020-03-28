@@ -1,3 +1,5 @@
+import { remove } from 'shared/util'
+
 /**
  * 依赖收集器
  */
@@ -10,6 +12,11 @@ export default class Dep {
   addSub (sub) {
     // 收集到的watcher对象放在subs中存储
     this.subs.push(sub)
+  }
+
+  // 移除subs中的一个watcher对象
+  removeSub (sub) {
+    remove(this.subs, sub)
   }
 
   depend () {
@@ -31,8 +38,15 @@ export default class Dep {
 
 // 收集依赖的目标对象
 Dep.target = null
+// 使用一个堆栈存储target对象
+const targetStack = []
 
 // 在watcher中会调用此方法，从而触发依赖收集
 export function pushTarget(_target) {
+  if (Dep.target) targetStack.push(Dep.target)
   Dep.target = _target
+}
+
+export function popTarget() {
+  Dep.target = targetStack.pop()
 }

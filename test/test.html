@@ -29,13 +29,85 @@
     const vue = new Vue({
       el: '#app',
       template: `
-        <div>{{a}}</div>
+        <div>
+        <div v-if="isShow">{{fullName}}</div>
+        <div>{{age}}</div>
+        <div><button @click="onClickUpdateFirstName">修改fistname</button></div>
+        <div><button @click="onClickUpdateLastName">修改lastname</button></div>
+        <div><button @click="onClickUpdateAge">修改age</button></div>
+        <div><button @click="isShow = !isShow">切换显示/隐藏</button></div>
+        </div>
       `,
       data: function() {
         return {
-          a: 1
+          firstName: 'guo',
+          lastName: 'hao',
+          age: 29,
+          isShow: true
         }
-      }
+      },
+      computed: {
+        fullName() {
+          return this.firstName + ' ' + this.lastName
+        }
+      },
+      watch: {
+        firstName(newValue, oldValue) {
+          console.log(newValue, oldValue)
+        },
+        // watch可以传入数组，当属性值变化时，数组中的每一个函数都会执行
+        lastName: [(newValue, oldValue) => {
+          console.log('watch lastname 1:', newValue, oldValue)
+        }, (newValue, oldValue) => {
+          console.log('watch lastName 2:', newValue, oldValue)
+        }],
+        age: {
+          handler: (newValue, oldValue) => {
+            console.log('watch age:', newValue, oldValue)
+          },
+          // 初始状态下就调用一次handler
+          immediate: true,
+          // 深度监听
+          deep: true
+        }
+      },
+      beforeCreate() {
+        console.log('callhook breforeCreate - this.firstName: ', this.firstName)
+        console.log('callhook breforeCreate - this.$el: ', this.$el)
+      },
+      created() {
+        console.log('callhook created - this.firstName: ', this.firstName)
+        console.log('callhook created - this.$el: ', this.$el)
+      },
+      beforeMount() {
+        console.log('callhook beforeMount - this.$el: ', this.$el)
+      },
+      mounted() {
+        console.log('callhook mounted - this.$el: ', this.$el)
+      },
+      beforeUpdate() {
+        console.log('callhook beforeUpdate - this.firstName: ', this.firstName)
+      },
+      updated() {
+        console.log('callhook updated - this.firstName: ', this.firstName)
+      },
+      beforeDestroy() {
+        console.log('callhook beforeDestroy - this.firstName: ', this.firstName)
+      },
+      destroyed() {
+        console.log('callhook destroyed - this.firstName: ', this.firstName)
+      },
+      methods: {
+        onClickUpdateFirstName () {
+          this.firstName += '1'
+        },
+        onClickUpdateLastName () {
+          this.lastName += '2'
+        },
+        onClickUpdateAge () {
+          this.age++
+        }
+      },
     })
 
     console.log(vue)
