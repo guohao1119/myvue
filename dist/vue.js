@@ -8165,6 +8165,7 @@ Vue$3.prototype.$mount = function (
   hydrating
 ) {
   el = el && inBrowser ? query(el) : undefined;
+  console.log(1)
   return mountComponent(this, el, hydrating)
 };
 
@@ -10420,7 +10421,7 @@ Vue$3.prototype.$mount = function (
   hydrating
 ) {
   el = el && query(el);
-
+console.log(2)
   /* istanbul ignore if */
   if (el === document.body || el === document.documentElement) {
     "development" !== 'production' && warn(

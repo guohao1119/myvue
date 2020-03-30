@@ -37,6 +37,7 @@ export function mountComponent (vm, el) {
   // 在挂载el之前调用
   callHook(vm, 'beforeMount')
 
+  // 挂载组件时，会调用vue实例的_render方法，该方法在初始化时的renderMixin中定义
   let updateComponent = () => {
     vm._update(vm._render())
   }

@@ -28,6 +28,7 @@
     // test2 增加el，并通过template的方式将a挂载到该元素上
     const vue = new Vue({
       el: '#app',
+      // 如果既不传template,也不传render，则根据el创建一个div
       template: `
         <div>
         <div v-if="isShow">{{fullName}}</div>

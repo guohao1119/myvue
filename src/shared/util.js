@@ -24,3 +24,19 @@ export function remove (arr, item) {
     }
   }
 }
+
+// 此方法将传进来的str转成对象的形式
+// str 以逗号分隔的字符串 'script,style,area'
+//  -> 
+// {script: true, style: true, area: true}
+// 最终返回的是一个匿名方法 val => map[val]
+// 可以通过调用返回的该方法来判断数据是否处于该对象中
+export function makeMap (str, expectsLowerCase) {
+  const map = Object.create(null)
+  const list = str.split(',')
+  for (let i = 0; i < list.length; i++) {
+    map[list[i]] = true
+  }
+
+  return expectsLowerCase ? val => map[val.toLowerCase()] : val => map[val]
+}

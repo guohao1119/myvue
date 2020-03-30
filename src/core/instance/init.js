@@ -1,8 +1,14 @@
 import { initState } from './state'
 import { callHook } from './lifecycle'
+import { initProxy } from './proxy'
 export function initMixin (Vue) {
   Vue.prototype._init = function (options) {
     const vm = this
+
+    // 在开发环境下初始化代理
+    if (process.env.NODE_ENV !== 'production') {
+      initProxy()
+    }
 
     // 生命周期钩子函数 1 beforeCreate
     // 在Vue实例初始化之后，数据劫持之前调用
